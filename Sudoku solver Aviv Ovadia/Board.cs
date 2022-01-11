@@ -17,6 +17,98 @@ namespace Sudoku_solver_Aviv_Ovadia
         {
 
         }
+        //sets the color of the text to white or green
+        private void setcolor(bool flag)
+        {
+            if (flag)
+                { Console.ForegroundColor = ConsoleColor.Green; }
+            else
+                Console.ForegroundColor = ConsoleColor.White;
+        }
+
+        //displays the board nicely
+        public void display()
+        {
+            int i, j;
+            for (i = 0; i < 3 * length; i++)
+            {
+                
+                for (j = 0; j < 6 * length; j++)
+                {
+                    setcolor(false);
+                    if (i % (scale * 3) == 0&& (j % (scale * 6) == 0||j%6!=0))
+                        setcolor(true);
+                    if (j % (scale * 6) == 0)
+                        setcolor(true);
+                    if (i == 0) {
+                        setcolor(true);
+                        if (j == 6 * length - 1)
+                        {
+                            setcolor(true);
+                            Console.WriteLine("_");
+                        }
+                        else
+                            Console.Write("_");
+                    }
+                    else if (j == 6 * length - 1)
+                    {
+
+                        if (i % 3 == 0)
+                        {
+                            Console.Write("_");
+                            setcolor(true);
+                            Console.WriteLine("|");
+                        }
+                        else
+                        {
+                            setcolor(true);
+                            Console.WriteLine(" |");
+                        }
+                    }
+                    else if(i % 3 == 0){
+                        if(j%6==0)
+                            Console.Write("|");
+                        else
+                            Console.Write("_");
+                    }
+                    else if (i % 3== 1)
+                    {
+                        if (j % 6 == 0)
+                            Console.Write("|");
+                       else
+                            Console.Write(" ");
+                    }
+                    else if (i % 3 == 2)
+                    {
+                        if (j % 6 == 0)
+                            Console.Write("|");
+                        else if (j % 6 == 3)
+                            Console.Write(matrix[i / 3, j / 6].value());
+                        else
+                            Console.Write(" ");
+                    }
+
+                }
+            }
+              for(j=0;j<length*6;j++)
+             {  setcolor(false);
+                if (j % 6 == 0)
+                {
+                    if (j % (6 * scale) == 0)
+                        setcolor(true);
+                    Console.Write("|");
+                }
+                else
+                {
+                    setcolor(true);
+                    Console.Write("_");
+                }
+             }
+            Console.WriteLine("|\n\n");
+            setcolor(false);
+        }
+
+
         //the function checks if the length of the input fits for a sudoku board -> the length is a power of 4 to some number.
         //if it fits, update the length and the scale appropriately, if not, throws exception (not valid size exception)
         public void check_input_size(string str)
@@ -30,6 +122,8 @@ namespace Sudoku_solver_Aviv_Ovadia
                 this.scale =(int)Math.Sqrt(this.length);
             }
         }
+
+
         //the function checks each key of the input, if there is an invalid key throw exception (not valid key exception).
         public void check_input_keys(string str)
         {
@@ -42,6 +136,8 @@ namespace Sudoku_solver_Aviv_Ovadia
                 }
             }
         }
+
+
         //the function initialize the matrix, and initialize each cell inside it corresponds to the input board.
         public void matrix_init(string str)
         {
@@ -56,6 +152,8 @@ namespace Sudoku_solver_Aviv_Ovadia
                 }
             }
         }
+
+
         //the function gets an input, if the input is valid, create a fitting matrix and stores inside it the input board. 
         public void get_matrix(string str)
         {

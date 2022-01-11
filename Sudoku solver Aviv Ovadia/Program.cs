@@ -7,7 +7,15 @@ using System.Threading.Tasks;
 namespace Sudoku_solver_Aviv_Ovadia
 {
     class Program
-    {
+
+    {   //sets the color of the text to white or green
+        public void setcolor(bool flag)
+        {
+            if (flag)
+            { Console.ForegroundColor = ConsoleColor.Green; }
+            else
+                Console.ForegroundColor = ConsoleColor.White;
+        }
         static void Main(string[] args)
         {
             //cell cell = new cell(3, 2, 5);
@@ -23,7 +31,7 @@ namespace Sudoku_solver_Aviv_Ovadia
             //board.check_input_keys(str);
             //Console.WriteLine("length is: "+board.length+ " scale is:"+board.scale);
             board.get_matrix(str);
-            Console.WriteLine(board.matrix[0,3].value());
+            board.display();
 
             Console.ReadKey();
         }
