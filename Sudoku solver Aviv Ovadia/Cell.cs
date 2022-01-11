@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Sudoku_solver_Aviv_Ovadia
 {
@@ -13,15 +10,20 @@ namespace Sudoku_solver_Aviv_Ovadia
         public int col { get; set; }
         public int box { get; set; }
         public int[] options { get; set; } //array of options
-       
-      
-        public Cell(int row,int col,int box,int value=0)
+
+
+        public Cell(int scale, int row, int col, int value = 0)
         {
             this.row = row;
             this.col = col;
-            this.box = box;
-            if (value == 0){
-                this.options = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+            this.box = row+col/scale;
+            if (value == 0)
+            {
+                this.options = new int[scale*scale];
+                for(int i = 0; i < scale * scale; i++)
+                {
+                    options[i] = i+1;
+                }
             }
             else
             {
@@ -31,7 +33,7 @@ namespace Sudoku_solver_Aviv_Ovadia
         }
 
         //the function returns the value of the cell, if it doesn't have value yet -> returns 0.
-        public int value() 
+        public int value()
         {
             if (this.options.Length == 1)
                 return this.options[0];
@@ -50,14 +52,14 @@ namespace Sudoku_solver_Aviv_Ovadia
                     options = options.Where(num => num != value).ToArray(); //removes the value from the array
                     flag = true;
                 }
-               
+
             }
             return flag;
         }
         //the function prints the cell's properties -> auxiliary function for testing and debugging.
         public void show()
         {
-            Console.WriteLine("row:" + row + " col:" + col+" box:"+box);
+            Console.WriteLine("row:" + row + " col:" + col + " box:" + box);
             Console.WriteLine("options:");
             Console.WriteLine("[{0}]", string.Join(", ", this.options));
 
