@@ -10,6 +10,13 @@ namespace Sudoku_solver_Aviv_Ovadia
     {
         static void Main(string[] args)
         {
+            Cell cell = new Cell(3,2,5);
+            cell.show();
+            Console.WriteLine(cell.remove(5));
+            cell.show();
+            Console.WriteLine(cell.remove(5));
+            cell.show();
+            Console.WriteLine(cell.value());
         }
     }
 }
