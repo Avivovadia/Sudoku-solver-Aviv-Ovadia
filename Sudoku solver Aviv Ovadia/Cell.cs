@@ -41,12 +41,16 @@ namespace Sudoku_solver_Aviv_Ovadia
         //also returns whether the value got removed or not.
         public bool remove(int value)
         {
-           int pos = Array.IndexOf(options, value);
-           bool flag = false;
-           if (pos != -1)
+            bool flag = false;
+            if (this.value() == 0)
             {
-                options = options.Where(num => num != value).ToArray();
-                flag = true;
+                int pos = Array.IndexOf(options, value);
+                if (pos != -1)
+                {
+                    options = options.Where(num => num != value).ToArray(); //removes the value from the array
+                    flag = true;
+                }
+               
             }
             return flag;
         }
