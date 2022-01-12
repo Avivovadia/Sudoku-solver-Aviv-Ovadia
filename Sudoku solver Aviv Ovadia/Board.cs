@@ -9,7 +9,8 @@ namespace Sudoku_solver_Aviv_Ovadia
 {
     class Board  //Board class repressents a full sudoku board. It has a matrix of Cells,length and scale.
     {   public Cell[,] matrix { get; set; }
-       public Cell[,] boxmatrix { get; set; }
+        public Cell[,] boxmatrix { get; set; } //every row in this matrix is a box, it makes it easier to check boxes.
+        //both matrix and boxmatrix point to the same cells.
         public int length { get; set; }
         public int scale { get; set; }
 
@@ -18,7 +19,7 @@ namespace Sudoku_solver_Aviv_Ovadia
         {
 
         }
-        //sets the color of the text to white or green
+        //sets the color of the text to white or green, used in displaying the board.
         private void setcolor(bool flag)
         {
             if (flag)
@@ -84,7 +85,11 @@ namespace Sudoku_solver_Aviv_Ovadia
                         if (j % 6 == 0)
                             Console.Write("|");
                         else if (j % 6 == 3)
-                            Console.Write(matrix[i / 3, j / 6].value());
+                        {   if(matrix[i / 3, j / 6].hasValue())
+                              Console.Write(matrix[i / 3, j / 6].value());
+                            else
+                                Console.Write(" ");
+                        }
                         else
                             Console.Write(" ");
                     }
@@ -151,7 +156,49 @@ namespace Sudoku_solver_Aviv_Ovadia
             }
         }
 
+        //the function checks if the numbers in the matrix are placed legally
+        //(not 2 of the same number in the same row,col,box). else, throw exception(not valid placing exception).
+        public void check_valid()
+        {
+            Cell cell;
+            Cell[] element;
+            int i, j, k;
+            for(i = 0; i < length; i++)
+            {
+                for ( j = 0; j < length; j++)
+                {
+                    cell = matrix[i, j];
+                    if (cell.value() != 0)
+                    {
+                        element = GetRow(matrix, cell.row);
+                        for( k = 0; k < length; k++)
+                        {
+                            if (element[k].value() == cell.value() && cell != element[k])
+                            {
+                                throw new InvalidInputException();
+                            }
+                        }
+                        element = GetColumn(matrix, cell.col);
+                        for (k = 0; k < length; k++)
+                        {
+                            if (element[k].value() == cell.value() && cell != element[k])
+                            {
+                                throw new InvalidInputException();
+                            }
+                        }
+                        element = GetRow(boxmatrix, cell.box);
+                        for (k = 0; k < length; k++)
+                        {
+                            if (element[k].value() == cell.value() && cell != element[k])
+                            {
+                                throw new InvalidInputException();
+                            }
+                        }
+                    }
+                }
+            }
 
+        }
         //the function initialize the matrix, and initialize each cell inside it corresponds to the input board.
         public void matrix_init(string str)
         {
@@ -191,6 +238,7 @@ namespace Sudoku_solver_Aviv_Ovadia
             check_input_size(str);
             check_input_keys(str);
             matrix_init(str);
+            check_valid();
         }
     }
 }

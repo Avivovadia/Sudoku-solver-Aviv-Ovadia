@@ -39,6 +39,11 @@ namespace Sudoku_solver_Aviv_Ovadia
                 return this.options[0];
             return 0;
         }
+        //the function returns true if there is a value in the cell
+        public bool hasValue()
+        {
+            return this.value() != 0;
+        }
         //the function removes the value from the cell's options if its inside the array,
         //also returns whether the value got removed or not.
         public bool remove(int value)

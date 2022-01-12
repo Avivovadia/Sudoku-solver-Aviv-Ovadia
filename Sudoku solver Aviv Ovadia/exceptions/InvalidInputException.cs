@@ -7,7 +7,11 @@ using System.Threading.Tasks;
 namespace Sudoku_solver_Aviv_Ovadia
 {
     class InvalidInputException:Exception
-    {   
+    {
+        public InvalidInputException() : base(modifymessage())
+        {
+
+        }
         public InvalidInputException(int length) : base(modifymessage(length))
         {
 
@@ -15,6 +19,10 @@ namespace Sudoku_solver_Aviv_Ovadia
         public InvalidInputException(char chr,int length) : base(modifymessage(chr,length))
         {
 
+        }
+        public static string modifymessage()
+        {
+            return "Invalid Input Exception: found the same number twice in an element (row, column, box)";
         }
         public static string modifymessage(int length)
         {
