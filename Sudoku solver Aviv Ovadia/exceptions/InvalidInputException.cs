@@ -12,7 +12,7 @@ namespace Sudoku_solver_Aviv_Ovadia
         {
 
         }
-        public InvalidInputException(char chr) : base(modifymessage(chr))
+        public InvalidInputException(char chr,int length) : base(modifymessage(chr,length))
         {
 
         }
@@ -20,9 +20,9 @@ namespace Sudoku_solver_Aviv_Ovadia
         {
             return "Invalid Input Exception: " + length.ToString() + " is not a valid length.";
         }
-        public static string modifymessage(char chr)
+        public static string modifymessage(char chr,int length)
         {
-            return "Invalid Input Exception: " + chr + " is not a valid key.";
+            return "Invalid Input Exception: " + chr + " is not a valid key for length "+length.ToString();
         }
 
     }

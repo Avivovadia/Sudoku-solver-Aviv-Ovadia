@@ -9,6 +9,7 @@ namespace Sudoku_solver_Aviv_Ovadia
 {
     class Board  //Board class repressents a full sudoku board. It has a matrix of Cells,length and scale.
     {   public Cell[,] matrix { get; set; }
+       public Cell[,] boxmatrix { get; set; }
         public int length { get; set; }
         public int scale { get; set; }
 
@@ -108,6 +109,19 @@ namespace Sudoku_solver_Aviv_Ovadia
             setcolor(false);
         }
 
+        //two functions meant to help getting data from matrixes.
+        public Cell[] GetColumn(Cell[,] matrix, int columnNumber)
+        {
+            return Enumerable.Range(0, matrix.GetLength(0))
+                    .Select(x => matrix[x, columnNumber])
+                    .ToArray();
+        }
+        public Cell[] GetRow(Cell[,] matrix, int rowNumber)
+        {
+            return Enumerable.Range(0, matrix.GetLength(1))
+                    .Select(x => matrix[rowNumber, x])
+                    .ToArray();
+        }
 
         //the function checks if the length of the input fits for a sudoku board -> the length is a power of 4 to some number.
         //if it fits, update the length and the scale appropriately, if not, throws exception (not valid size exception)
@@ -132,7 +146,7 @@ namespace Sudoku_solver_Aviv_Ovadia
                 value = chr - '0';
                 if (value < 0 || value > this.length)
                 {
-                    throw new InvalidInputException(chr);
+                    throw new InvalidInputException(chr,this.length);
                 }
             }
         }
@@ -142,13 +156,30 @@ namespace Sudoku_solver_Aviv_Ovadia
         public void matrix_init(string str)
         {
             int value;
+            Cell[] element;
+            Cell cell;
+            
+            int index;
             this.matrix = new Cell[length, length];
-            for(int i = 0; i < length; i++)
+            this.boxmatrix = new Cell[length, length];
+
+            for (int i = 0; i < length; i++)
             {
                 for(int j = 0; j < length; j++)
                 {
                     value = str[i * length + j] - '0';
                     matrix[i, j] = new Cell(scale, i, j, value);
+                }
+            }
+            for (int i = 0; i < length; i++)
+            {
+                for (int j = 0; j < length; j++)
+                {
+                    cell = matrix[i, j];
+                   
+                    index = 0;
+                   while (boxmatrix[cell.box,index] !=null) { index++; }
+                    boxmatrix[cell.box, index] = cell;
                 }
             }
         }

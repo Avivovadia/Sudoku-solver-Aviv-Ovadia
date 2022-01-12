@@ -16,7 +16,7 @@ namespace Sudoku_solver_Aviv_Ovadia
         {
             this.row = row;
             this.col = col;
-            this.box = row+col/scale;
+            this.box = scale*(row/scale)+col/scale;
             if (value == 0)
             {
                 this.options = new int[scale*scale];
