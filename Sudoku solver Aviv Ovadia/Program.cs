@@ -33,12 +33,12 @@ namespace Sudoku_solver_Aviv_Ovadia
            
             Stopwatch sw = new Stopwatch();
             Board board = new Board();
-            board.get_matrix(validgrid3);
+            board.get_matrix(validgrid3); ;
             
             board.display();
             sw.Start();
-           
-            board.display();
+
+            //  board.display();
             //while (Solver.update_options(board))
             //{
             //    Console.WriteLine("number " + i);
@@ -51,7 +51,12 @@ namespace Sudoku_solver_Aviv_Ovadia
                 i++;
                 board.display();
             }
-
+            sw.Stop();
+            board.display();
+            Console.WriteLine("time elapsed:{0} ", sw.ElapsedMilliseconds + " miliseconds");
+            Console.WriteLine("Starting brute force...");
+            sw.Start();
+            Solver.brute_force(board);
             board.display();
             sw.Stop();
             Console.WriteLine("solved!!!");

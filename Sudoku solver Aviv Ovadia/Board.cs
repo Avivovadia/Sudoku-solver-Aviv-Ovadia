@@ -168,24 +168,26 @@ namespace Sudoku_solver_Aviv_Ovadia
 
         //the function checks if the numbers in the matrix are placed legally
         //(not 2 of the same number in the same row,col,box). else, throw exception(not valid placing exception).
-        public void check_valid()
+        public bool check_valid()
         {
             Cell cell;
             Cell[] element;
             int i, j, k;
+            bool flag = true;
             for(i = 0; i < length; i++)
             {
                 for ( j = 0; j < length; j++)
                 {
                     cell = matrix[i, j];
-                    if (cell.value() != 0)
+                    if (cell.hasValue() )
                     {
                         element = GetRow(matrix, cell.row);
                         for( k = 0; k < length; k++)
                         {
                             if (element[k].value() == cell.value() && cell != element[k])
                             {
-                                throw new InvalidInputException();
+                                //throw new InvalidInputException();
+                                flag = false;
                             }
                         }
                         element = GetColumn(matrix, cell.col);
@@ -193,7 +195,9 @@ namespace Sudoku_solver_Aviv_Ovadia
                         {
                             if (element[k].value() == cell.value() && cell != element[k])
                             {
-                                throw new InvalidInputException();
+                                // throw new InvalidInputException();
+                                flag = false;
+
                             }
                         }
                         element = GetRow(boxmatrix, cell.box);
@@ -201,12 +205,20 @@ namespace Sudoku_solver_Aviv_Ovadia
                         {
                             if (element[k].value() == cell.value() && cell != element[k])
                             {
-                                throw new InvalidInputException();
+                                //throw new InvalidInputException();
+                                flag = false;
+
                             }
+
                         }
+                        if (!flag)
+                            break;
                     }
                 }
+                if (!flag)
+                    break;
             }
+            return flag;
 
         }
         //the function initialize the matrix, and initialize each cell inside it corresponds to the input board.
@@ -248,7 +260,9 @@ namespace Sudoku_solver_Aviv_Ovadia
             check_input_size(str);
             check_input_keys(str);
             matrix_init(str);
-            check_valid();
+            if(!check_valid())
+                throw new InvalidInputException();
+
         }
     }
 }

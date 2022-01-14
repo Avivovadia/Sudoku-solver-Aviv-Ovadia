@@ -71,6 +71,8 @@ namespace Sudoku_solver_Aviv_Ovadia
             }
             return optionscount;
         }
+
+
         //the function solves cells in element by checking if there is an option which appear only once in the element.(hidden single)
         public static bool solve_single_inArray(Cell[] element,Board board)
         {
@@ -98,6 +100,7 @@ namespace Sudoku_solver_Aviv_Ovadia
             return flag;
         }
 
+
         //the functioin solves the board by the tactics hidden single and naked single.
         public static bool solve_singles(Board board)
         {
@@ -118,10 +121,43 @@ namespace Sudoku_solver_Aviv_Ovadia
             }
             return flag;
         }
-        //the function gets the board and try to solve it using brute force -> check every possible combination.
-        public void brute_force(Board board)
-        {
 
+        //returns the next empty cell in the board
+        public static Cell next_pos(Board board)
+        {
+            for(int i = 0; i < board.length; i++)
+            {
+                for(int j = 0; j < board.length; j++)
+                {
+                    if (!board.matrix[i, j].hasValue())
+                        return board.matrix[i, j];
+                }
+            }
+            return null;
+        }
+        //the function gets the board and try to solve it using brute force -> check every possible combination.
+        public static bool brute_force(Board board)
+        {
+            Cell nextempty = next_pos(board);
+            if (nextempty == null)
+                return true;
+            int[] options = nextempty.options;
+           // nextempty.show();
+            foreach(int option in options)
+            {
+                nextempty.setValue(option);
+               // Console.WriteLine("put value "+option);
+                if (board.check_valid())
+                {
+                    if (brute_force(board))
+                    {
+                        return true;
+                    }
+                }
+
+                nextempty.options = options;
+            }
+            return false;
         }
 
         //the main function which gets a board and solves it.
