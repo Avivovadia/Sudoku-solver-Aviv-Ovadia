@@ -84,11 +84,21 @@ namespace Sudoku_solver_Aviv_Ovadia
                     {
                         if (j % 6 == 0)
                             Console.Write("|");
-                        else if (j % 6 == 3)
-                        {   if(matrix[i / 3, j / 6].hasValue())
-                              Console.Write(matrix[i / 3, j / 6].value());
-                            else
-                                Console.Write(" ");
+                        else if (j % 6 == 3 || j % 6 == 4)
+
+                        {
+                            if (j % 6 == 3)
+                            {
+                                if (matrix[i / 3, j / 6].hasValue())
+                                {
+                                    if (matrix[i / 3, j / 6].value() >= 10)
+                                        Console.Write(matrix[i / 3, j / 6].value());
+                                    else
+                                        Console.Write(matrix[i / 3, j / 6].value() + " ");
+                                }
+                                else
+                                    Console.Write("  ");
+                            }
                         }
                         else
                             Console.Write(" ");
