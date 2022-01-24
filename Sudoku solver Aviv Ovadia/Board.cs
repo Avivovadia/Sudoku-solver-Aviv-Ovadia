@@ -188,8 +188,11 @@ namespace Sudoku_solver_Aviv_Ovadia
                             {
                                 //throw new InvalidInputException();
                                 flag = false;
+                                break;
                             }
                         }
+                        if (!flag)
+                            break;
                         element = GetColumn(matrix, cell.col);
                         for (k = 0; k < length; k++)
                         {
@@ -197,9 +200,11 @@ namespace Sudoku_solver_Aviv_Ovadia
                             {
                                 // throw new InvalidInputException();
                                 flag = false;
-
+                                break;
                             }
                         }
+                        if (!flag)
+                            break;
                         element = GetRow(boxmatrix, cell.box);
                         for (k = 0; k < length; k++)
                         {
@@ -207,7 +212,7 @@ namespace Sudoku_solver_Aviv_Ovadia
                             {
                                 //throw new InvalidInputException();
                                 flag = false;
-
+                                break;
                             }
 
                         }

@@ -47,7 +47,9 @@ namespace Sudoku_solver_Aviv_Ovadia
                     if (board.matrix[i, j].hasValue())
                     {
                         if (update_options_cell(board, i, j))
+                        {
                             flag = true;
+                        }
                     }
                 }
             }
@@ -78,50 +80,153 @@ namespace Sudoku_solver_Aviv_Ovadia
         {
             bool flag = false;
             int value;
-            Cell cell;
+            int count;
             int[] optionscount = generate_options_count(element, board);
-            
-            while((value = Array.IndexOf(optionscount, 1) + 1) != 0)
+
+            while ((value = Array.IndexOf(optionscount, 1) + 1) != 0)
             {
-                flag = true;
+                count = 0;
                 foreach (Cell c in element)
                 {
                     if (c.options.Contains(value))
-                    {
-                        c.setValue(value);
-                        update_options_cell(board, c.row, c.col);
-                        break;
-                    }
+                        count++;
                 }
-                optionscount = generate_options_count(element, board);
-
-
+                if (count == 1)            //if there is no solved cell in the element which has the value of the option. 
+                {
+                    flag = true;
+                    foreach (Cell c in element)
+                    {
+                        if (c.options.Contains(value))
+                        {
+                            c.setValue(value);
+                            update_options_cell(board, c.row, c.col);
+                            break;
+                        }
+                    }
+                    optionscount = generate_options_count(element, board);
+                }
+                else
+                    break;
+              
             }
             return flag;
         }
 
-
-        //the functioin solves the board by the tactics hidden single and naked single.
-        public static bool solve_singles(Board board)
+        //the function solves all hidden singles in board.
+        public static bool solve_hidden_singles(Board board)
         {
-            while (update_options(board))
-            {
-
-            }
             int i;
             bool flag = false;
             for (i = 0; i < board.length; i++)
             {
-               if( solve_single_inArray(board.GetRow(board.matrix, i), board)||
-                    solve_single_inArray(board.GetColumn(board.matrix,i),board)||
-                    solve_single_inArray(board.GetRow(board.boxmatrix, i), board))
-                {
+                if (solve_single_inArray(board.GetRow(board.matrix, i), board))
                     flag = true;
-                }
+               
+            }
+            for (i = 0; i < board.length; i++)
+            {
+               
+                if (solve_single_inArray(board.GetColumn(board.matrix, i), board))
+                    flag = true;
+               
+
+            }
+            for (i = 0; i < board.length; i++)
+            {
+                
+                if (solve_single_inArray(board.GetRow(board.boxmatrix, i), board))
+                    flag = true;
+
             }
             return flag;
         }
+      
+        //the function solves the board by the tactics hidden single and naked single.
+        public static void solve_singles(Board board)
+        {
+            while (update_options(board)||solve_hidden_singles(board))
+            {
+                
+            }
+            
+            
+          
+        }
 
+
+        //the function checks if all the cells that contains the option are in the same row/collumn, if they are, it returns this row/collum otherwise returns null.
+        public static Cell[] options_in_same_element(int option, Cell[] box,Board board)
+        {
+            int[] rowcounter=new int[board.scale];
+            int[] colcounter=new int[board.scale];
+            int startrow = box[0].row,row,col;
+            int startcol = box[0].col;
+            foreach(Cell cell in box)
+            {
+                if (!cell.hasValue()&&cell.options.Contains(option))
+                {
+                    rowcounter[cell.row % board.scale]=1;
+                    colcounter[cell.col % board.scale]=1;
+                }
+            }
+            if (rowcounter.Sum() == 1)
+            {
+                row = Array.IndexOf(rowcounter, 1);
+                
+                return board.GetRow(board.matrix, row + startrow);
+
+            }
+            if (colcounter.Sum() == 1)
+            {
+                col = Array.IndexOf(colcounter, 1);
+                return board.GetColumn(board.matrix, col + startcol);
+            }
+            return null;
+        }
+
+        //the function solves the board with intersection tactic:
+        // if the placing of an option in a box is in only one row/collumn,
+        // remove the option from all the other cells in the row/collumn which are not in the box.
+        public static bool solve_intersection(Board board)
+        {
+            Cell[] box;
+            Cell[] element;
+            int[] optionscount;
+            int option;
+            bool flag = false;
+            for(int i = 0; i < board.length; i++)
+            {
+                box = board.GetRow(board.boxmatrix, i);
+                optionscount = generate_options_count(box, board);
+                for(int j = 0; j < board.length; j++)
+                {   
+                    
+                    if (optionscount[j] > 1)
+                    {
+                        option = j + 1;
+                        if ((element = options_in_same_element(option, box, board)) != null)
+                        {
+                            foreach (Cell cell in element)
+                            {
+                                if (cell.box != i)
+                                {
+                                    if (cell.remove(option))
+                                    {flag = true;
+                                    }
+                                }
+                            }
+                        }
+                        
+                        
+                    }
+                    if (flag)
+                        break;
+                }
+                if (flag)
+                    break;
+            }
+            return flag;
+        }
         //returns the next empty cell in the board
         public static Cell next_pos(Board board)
         {
@@ -142,14 +247,37 @@ namespace Sudoku_solver_Aviv_Ovadia
             if (nextempty == null)
                 return true;
             int[] options = nextempty.options;
-           // nextempty.show();
+           
             foreach(int option in options)
             {
                 nextempty.setValue(option);
-               // Console.WriteLine("put value "+option);
+              
                 if (board.check_valid())
                 {
                     if (brute_force(board))
+                    {
+                        return true;
+                    }
+                }
+
+                nextempty.options = options;
+            }
+            return false;
+        }
+        public static bool slow_brute_force(Board board)
+        {
+            Cell nextempty = next_pos(board);
+            if (nextempty == null)
+                return true;
+            int[] options = nextempty.options;
+          
+            for (int i=1;i<=board.length;i++)
+            {
+                nextempty.setValue(i);
+                // Console.WriteLine("put value "+option);
+                if (board.check_valid())
+                {
+                    if (slow_brute_force(board))
                     {
                         return true;
                     }
