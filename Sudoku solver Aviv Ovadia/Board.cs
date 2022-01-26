@@ -4,17 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-
 namespace Sudoku_solver_Aviv_Ovadia
 {
     class Board  //Board class repressents a full sudoku board. It has a matrix of Cells,length and scale.
     {   public Cell[,] matrix { get; set; }
-        public Cell[,] boxmatrix { get; set; } //every row in this matrix is a box, it makes it easier to check boxes.
-        //both matrix and boxmatrix point to the same cells.
+        public Cell[,] boxmatrix { get; set; }  //every row in this matrix is a box, it makes it easier to check boxes.
+                                                //both matrix and boxmatrix point to the same cells.
         public int length { get; set; }
         public int scale { get; set; }
-
-
         public Board(string str)
         {
             get_matrix(str);
@@ -136,20 +133,18 @@ namespace Sudoku_solver_Aviv_Ovadia
             return Enumerable.Range(0, matrix.GetLength(1))
                     .Select(x => matrix[rowNumber, x])
                     .ToArray();
-        }
+        }           //GetRow(boxmatrix,i) -> returns box i
 
         //the function checks if the length of the input fits for a sudoku board -> the length is a power of 4 to some number.
         //if it fits, update the length and the scale appropriately, if not, throws exception (not valid size exception)
         public void check_input_size(string str)
         {
             int length = str.Length;
-            if (Math.Sqrt(Math.Sqrt(length)) != Math.Ceiling(Math.Sqrt(Math.Sqrt(length))))
+            if (Math.Sqrt(Math.Sqrt(length)) != Math.Ceiling(Math.Sqrt(Math.Sqrt(length))))   //if the length is a power of 4
                 throw new InvalidInputException(length);
-            else
-            {
-                this.length = (int)Math.Sqrt(length);
-                this.scale =(int)Math.Sqrt(this.length);
-            }
+
+            this.length = (int)Math.Sqrt(length);
+            this.scale =(int)Math.Sqrt(this.length);           
         }
 
 
@@ -171,85 +166,41 @@ namespace Sudoku_solver_Aviv_Ovadia
         public bool check_valid()
         {
             Cell cell;
-            Cell[] element;
+            Cell[] box;
+            Cell[] col;
+            Cell[] row;
             int i, j, k;
             bool flag = true;
-            for(i = 0; i < length; i++)
+            for (i = 0; i < length; i++)
             {
-                for ( j = 0; j < length; j++)
+                for (j = 0; j < length; j++)
                 {
                     cell = matrix[i, j];
-                    if (cell.hasValue() )
+                    if (cell.hasValue())   //if the cell is not empty, check if any of neighboring cells has the same value 
                     {
-                        element = GetRow(matrix, cell.row);
-                        for( k = 0; k < length; k++)
-                        {
-                            if (element[k].value() == cell.value() && cell != element[k])
-                            {
-                                //throw new InvalidInputException();
-                               
-                                flag = false;
-                                break;
-                            }
-                        }
-                        if (!flag)
-                            break;
-                        element = GetColumn(matrix, cell.col);
+                        row = GetRow(matrix, cell.row);  //check row
+                        col = GetColumn(matrix, cell.col);  //check col
+                        box = GetRow(boxmatrix, cell.box); //check box
                         for (k = 0; k < length; k++)
                         {
-                            if (element[k].value() == cell.value() && cell != element[k])
+                            if ((row[k].value() == cell.value() && cell != row[k]) ||
+                                (col[k].value() == cell.value() && cell != col[k]) ||
+                                (box[k].value() == cell.value() && cell != box[k]))
                             {
-                                // throw new InvalidInputException();
-                               
                                 flag = false;
                                 break;
                             }
                         }
-                        if (!flag)
-                            break;
-                        element = GetRow(boxmatrix, cell.box);
-                        for (k = 0; k < length; k++)
-                        {
-                            if (element[k].value() == cell.value() && cell != element[k])
-                            {
-                                //throw new InvalidInputException();
-                                
-                                flag = false;
-                                break;
-                            }
-
-                        }
-                        if (!flag)
-                            break;
                     }
                 }
                 if (!flag)
                     break;
             }
             return flag;
-
         }
-       
-
-        //the function returns if the board would be valid if the value was put in the cell.(checks if there is another neighbor cell which it's value is value)
-        public bool check_valid_guess(Cell cell, int value)
-        {
-            Cell[] box = this.GetRow(boxmatrix, cell.box);
-            Cell[] row = this.GetRow(matrix, cell.row);
-            Cell[] col = this.GetColumn(matrix, cell.col);
-            bool flag = true;
-            for(int i = 0; i < this.length; i++)
-            {
-                if (box[i] != cell && box[i].value() == value)
-                    flag = false;
-                if (row[i] != cell && row[i].value() == value)
-                    flag = false;
-                if (col[i] != cell && col[i].value() == value)
-                    flag = false;
-            }
-            return flag;
-        }
-
+        
+        
+        //the function initializes the box-matrix, puts each cell in the appropriate box.
         public void boxmatrix_init()
         {
             Cell cell;
@@ -260,13 +211,13 @@ namespace Sudoku_solver_Aviv_Ovadia
                 for (int j = 0; j < length; j++)
                 {
                     cell = matrix[i, j];
-
                     index = 0;
                     while (boxmatrix[cell.box, index] != null) { index++; }
                     boxmatrix[cell.box, index] = cell;
                 }
             }
         }
+
         //the function initialize the matrix, and initialize each cell inside it corresponds to the input board.
         public void matrix_init(string str)
         {
@@ -289,7 +240,6 @@ namespace Sudoku_solver_Aviv_Ovadia
             boxmatrix_init();
         }
 
-
         //the function gets an input, if the input is valid, create a fitting matrix and stores inside it the input board. 
         public void get_matrix(string str)
         {
@@ -298,7 +248,6 @@ namespace Sudoku_solver_Aviv_Ovadia
             matrix_init(str);
             if(!check_valid())
                 throw new InvalidInputException();
-
         }
     }
 }
