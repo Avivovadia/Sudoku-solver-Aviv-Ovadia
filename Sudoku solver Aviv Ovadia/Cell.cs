@@ -67,6 +67,7 @@ namespace Sudoku_solver_Aviv_Ovadia
             }
             return flag;
         }
+
         //the function prints the cell's properties -> auxiliary function for testing and debugging.
         public void show()
         {

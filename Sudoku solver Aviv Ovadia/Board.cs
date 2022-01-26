@@ -15,9 +15,9 @@ namespace Sudoku_solver_Aviv_Ovadia
         public int scale { get; set; }
 
 
-        public Board()
+        public Board(string str)
         {
-
+            get_matrix(str);
         }
         //sets the color of the text to white or green, used in displaying the board.
         private void setcolor(bool flag)
@@ -123,7 +123,7 @@ namespace Sudoku_solver_Aviv_Ovadia
             Console.WriteLine("|\n\n");
             setcolor(false);
         }
-
+        
         //two functions meant to help getting data from matrixes.
         public Cell[] GetColumn(Cell[,] matrix, int columnNumber)
         {
@@ -187,6 +187,7 @@ namespace Sudoku_solver_Aviv_Ovadia
                             if (element[k].value() == cell.value() && cell != element[k])
                             {
                                 //throw new InvalidInputException();
+                               
                                 flag = false;
                                 break;
                             }
@@ -199,6 +200,7 @@ namespace Sudoku_solver_Aviv_Ovadia
                             if (element[k].value() == cell.value() && cell != element[k])
                             {
                                 // throw new InvalidInputException();
+                               
                                 flag = false;
                                 break;
                             }
@@ -211,6 +213,7 @@ namespace Sudoku_solver_Aviv_Ovadia
                             if (element[k].value() == cell.value() && cell != element[k])
                             {
                                 //throw new InvalidInputException();
+                                
                                 flag = false;
                                 break;
                             }
@@ -225,6 +228,44 @@ namespace Sudoku_solver_Aviv_Ovadia
             }
             return flag;
 
+        }
+       
+
+        //the function returns if the board would be valid if the value was put in the cell.(checks if there is another neighbor cell which it's value is value)
+        public bool check_valid_guess(Cell cell, int value)
+        {
+            Cell[] box = this.GetRow(boxmatrix, cell.box);
+            Cell[] row = this.GetRow(matrix, cell.row);
+            Cell[] col = this.GetColumn(matrix, cell.col);
+            bool flag = true;
+            for(int i = 0; i < this.length; i++)
+            {
+                if (box[i] != cell && box[i].value() == value)
+                    flag = false;
+                if (row[i] != cell && row[i].value() == value)
+                    flag = false;
+                if (col[i] != cell && col[i].value() == value)
+                    flag = false;
+            }
+            return flag;
+        }
+
+        public void boxmatrix_init()
+        {
+            Cell cell;
+            int index;
+            boxmatrix = new Cell[length, length];
+            for (int i = 0; i < length; i++)
+            {
+                for (int j = 0; j < length; j++)
+                {
+                    cell = matrix[i, j];
+
+                    index = 0;
+                    while (boxmatrix[cell.box, index] != null) { index++; }
+                    boxmatrix[cell.box, index] = cell;
+                }
+            }
         }
         //the function initialize the matrix, and initialize each cell inside it corresponds to the input board.
         public void matrix_init(string str)
@@ -245,17 +286,7 @@ namespace Sudoku_solver_Aviv_Ovadia
                     matrix[i, j] = new Cell(scale, i, j, value);
                 }
             }
-            for (int i = 0; i < length; i++)
-            {
-                for (int j = 0; j < length; j++)
-                {
-                    cell = matrix[i, j];
-                   
-                    index = 0;
-                   while (boxmatrix[cell.box,index] !=null) { index++; }
-                    boxmatrix[cell.box, index] = cell;
-                }
-            }
+            boxmatrix_init();
         }
 
 
