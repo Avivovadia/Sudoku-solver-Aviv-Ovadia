@@ -4,68 +4,129 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
+
 namespace Sudoku_solver_Aviv_Ovadia
 {
     class Program
 
-    {  
+        //the function gets filename and data string, creating in Boards directory a solution file for board with name filename, the data is the solution.
+    {   public static void createSolvedFile(string filename,string data)
+        {
+            string rootpath = System.IO.Path.GetFullPath(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..")); //root path
+            string boardspath = rootpath + "\\Sudoku solver Aviv Ovadia\\Boards\\"; //directory path
+            string postfix = ".txt";
+            string path = boardspath + filename + "_Solution" + postfix;
+            using (System.IO.StreamWriter sw = System.IO.File.CreateText(path))
+            {
+                sw.WriteLine(data);
+            }
+            Console.WriteLine("created solution file: "+filename+"_Solution"+postfix);
+
+        }
+        //the function gets a file name and returns its text, if the file don't exist in Boards directory, returns null
+        public static string getBoardFromFile(string filename)
+        {
+            string rootpath = System.IO.Path.GetFullPath(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..")); //root path
+            string boardspath = rootpath + "\\Sudoku solver Aviv Ovadia\\Boards\\"; //directory path
+            string postfix = ".txt";
+            string path = boardspath + filename+postfix; //file path 
+            string data = "";
+            if (System.IO.File.Exists(path))
+            {
+                data = System.IO.File.ReadAllText(path);
+                return data;
+            }
+            return null;
+        }
+        //solves valid sudoku, if input is string, prints the solved string, if input is file, create new solution file.
+        public static void Solvesudoku(int choice, string data, string filename)
+        {
+            try
+            {   Board board = new Board(data);
+                Stopwatch sw = new Stopwatch();
+                board.display();
+                sw.Start();
+                bool solved = Solver.solve(board);
+                sw.Stop();
+                if (solved)
+                {
+                    string solveddata = board.convert_to_string();
+                    board.display();
+                    Console.WriteLine("solved!!!");
+                    Console.WriteLine("time elapsed:{0} ", sw.ElapsedMilliseconds + " miliseconds");
+                    if (choice == 1)
+                    {
+                        createSolvedFile(filename, solveddata);
+                    }
+                    if (choice == 0)
+                    {
+                        Console.WriteLine("the solved string is:");
+                        Console.WriteLine(solveddata);
+                    }
+                }
+                else
+                    Console.WriteLine("couldn't solve...");
+            }
+            catch(InvalidInputException e)
+            {
+                Console.WriteLine(e.Message);
+            }     
+        }
+        //taking input from the user and solves one sudoku.
+        public static void HandleSudoku()
+        {
+            int choice=99;
+            bool valid = true;
+            string data,filename="";
+            Console.Write("\nChoose way to input a sudoku:\n0 for entering string, 1 for choosing a file from Boards directory:");         
+            while (choice != 1 && choice != 0)
+            {
+                bool Isnum = true;
+                try
+                {
+                    choice = Convert.ToInt32(Console.ReadKey().KeyChar)-48;
+                }
+                catch(System.FormatException e)
+                {
+                    Console.Write("\nInvalid key, try again: ");
+                    Isnum = false;
+                }
+                if (choice != 1 && choice != 0&&Isnum)
+                    Console.Write("\nInvalid key, try again: ");
+            }
+            if (choice == 1)
+            {
+                Console.Write("\n\nenter file name (without .txt): ");
+                filename = Console.ReadLine();
+                data = getBoardFromFile(filename);
+                if (data == null)
+                {
+                    Console.WriteLine("file does not exist.");
+                    valid = false;
+                }
+            }
+            else
+            {
+                Console.WriteLine("\n\nenter data string:");
+                data = Console.ReadLine();
+            }
+            if (valid)
+            {
+                Solvesudoku(choice,data,filename);
+            }
+        }
         static void Main(string[] args)
-        {    //10 - : 11 - ; 12 - < 13 - = 14 - > 15 - ? 16 - @
-            int i = 1;
-            string valid4x4 = "040080@0;010060>30090?04:70=00<006002;0080003000?000000=00>00204" +
-                              "0008030070005000000000>0000:0@0=009250000800;000<010000@00=00030" +
-                              "000<?0000600=047@1=0:00300700900600000;04009002:03000@000>800;00" +
-                              "5;3:000800<400010>00;9000=?04050=040600000020<090<0@0=00010060?0";
-            string oriboard = "00000000050000000000000000000000000000000000003000000000000000000000000000000000000000000000000000000000000602000000000000000000000000000000000000000000000000007000000000>00000005000000300000030=0000000000000000000000000000000000000000000000007000000000000";
-            string valid4x42 = "10023400<06000700080007003009:6;0<00:0010=0;00>0300?200>000900<0=000800:0<201?000;76000@000?005=000:05?0040800;0@0059<00100000800200000=00<580030=00?0300>80@000580010002000=9?000<406@0=00700050300<0006004;00@0700@050>0010020;1?900=002000>000>000;0200=3500<";
-            string valid4x43 = "00001:07004000@03070002000;0400<00410<000>782?0:0=:00;>0@00053605:;0001>0006000=0000<30:0@80?>00400050?020<=000000008000090>0004200070;0000<000000006=04070@000>00@60?5030>;0000;0003000=500064?0;2?00050<900@=0<05@=8:00060;900800406000;000:020>00070080=20000";
-            string valid4x44 = "102000;680054<00>00;08:0<09007000<00000002700?090090070000:0>85;0:0@1002;40600080300000900000000;942050>00=030000000008@3920040000100:?39600000000060900@0<02;4>00000000200000102000@0>8100=<06054?10>0000600@0060@00250000000<000<00@0:0710=00400:>?00;43000501";
-            string valid4x45 = "000=000000000000000000000000000220<00000000000007000?00060001000000>00000000030000000>000000<900000000000000000600000000000000@000>00000000000000000600000000000000000000006000000000000<3000600=0000000000000;0000000@0020000000000000?000000000000000000100000";
-            string validgrid1 = "410007560800009401500040000730000600946000813005000042000030004601200007094100086";//easy
-            string validgrid2 = "002501700600807009080204010007602500050000090004109200070305060500908007008706900";//moderate
-            string validgrid3 = "000659000009208100020103050738000614400000003192000578070401060004506700000732000";//hard
-            string validgrid4 = "060403020400109006001506400627000318000000000583000974006708200200304009010602040";//very hard
-            string validgrid5 = "800700003304050080000008500085006300200000006007100940006800000010090608700005004";//extreme
-            string validgrid6 = "020005900109308400603900000300004001000209000700100009000001604001406205004500080";//Ultra extreme
-            string validgrid7 = "080010020600305001007000400020109050700000006090603040005000300900201008030060070";
-            string validgrid8 = "007080200600702000090501060700009008400307002300800009010408050000905006008060900";
-            string validgrid9 = "123000000456000000000000000000000000000000000000000000000000000000000000000000000";
-            string custom= string.Concat(Enumerable.Repeat("0", 256));
-            char[] array = custom.ToCharArray();      
-            custom = new string(array);
-            string teo = "410000000000000730000009005000800900006700120204006000000004000031050060000013000";
-            string valid2x2 = "3040010204032010";
+        {
+
+            char endingchar = '1';
+            Console.WriteLine("Sudoku Solver!\n");
+            while (endingchar != '0')
+            {
+                HandleSudoku();
+                Console.Write("\nAgain? (press '0' to stop): ");
+                endingchar = Console.ReadKey().KeyChar;
+            }
             
-
-
-
-            Stopwatch sw = new Stopwatch();
-            //sw.Start();
-            Board board = new Board(valid4x45);
-            
-            board.display();
-
-            Console.WriteLine("Solving singles...");
-            sw.Start();
-
-
-
-            Solver.solve(board);
-            sw.Stop();
-            board.display();
-           
-           
-          
-
-           
-            Console.WriteLine(board.check_valid());
-
-
-
-            Console.WriteLine("solved!!!");
-            Console.WriteLine("time elapsed:{0} ", sw.ElapsedMilliseconds + " miliseconds");
-
-            Console.ReadKey();
         }
     }
 }

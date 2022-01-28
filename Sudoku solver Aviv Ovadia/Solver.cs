@@ -69,9 +69,9 @@ namespace Sudoku_solver_Aviv_Ovadia
          *     the function solves using tactics and when it can't progress it makes a guess and continues.
          -----------------------------------------------------------------------------------------------------------*/
         public static bool solve(Board board)
-        {     
+        {
             tactics(board); //solve tactics
-       
+            
             if (board.check_valid() == false)
                 return false;
             if (next_pos(board) == null)

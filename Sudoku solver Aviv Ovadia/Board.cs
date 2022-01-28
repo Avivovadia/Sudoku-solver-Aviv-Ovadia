@@ -187,6 +187,7 @@ namespace Sudoku_solver_Aviv_Ovadia
                                 (col[k].value() == cell.value() && cell != col[k]) ||
                                 (box[k].value() == cell.value() && cell != box[k]))
                             {
+                               
                                 flag = false;
                                 break;
                             }
@@ -248,6 +249,19 @@ namespace Sudoku_solver_Aviv_Ovadia
             matrix_init(str);
             if(!check_valid())
                 throw new InvalidInputException();
+        }
+
+        public string convert_to_string()
+        {
+            string str = "";
+            for(int i = 0; i < length; i++)
+            {
+                for(int j = 0; j < length; j++)
+                {
+                    str+=((char)(matrix[i, j].value() + '0'));
+                }
+            }
+            return str;
         }
     }
 }
