@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Sudoku_solver_Aviv_Ovadia
 {
-    class Cell //Cell class repressents a single cell in the board, has fields of its row, collum, box
+    public class Cell //Cell class repressents a single cell in the board, has fields of its row, collum, box
                //and its options to be put inside it.
     {
         public int row { get; set; }

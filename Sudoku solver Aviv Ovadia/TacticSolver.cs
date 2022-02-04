@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Sudoku_solver_Aviv_Ovadia
 {
-    class TacticSolver  //Solver class, contains function which solve Board by using human tactics.
+    public class TacticSolver  //Solver class, contains function which solve Board by using human tactics.
                         //contains implementations of human tactics.
     {
 
@@ -140,7 +140,66 @@ namespace Sudoku_solver_Aviv_Ovadia
         {
             while (update_options(board) || solve_hidden_singles(board)) { }
         }
+        //the function returns the number of times the options array in compare_cell appear in cells in element  
+        public static int count_same_options(Cell[] element,Cell compare_cell)
+        {
+            int count = 0;
+            foreach(Cell cell in element)
+            {
+                if (cell.options.SequenceEqual(compare_cell.options))
+                    count++;
+            }
+            return count;
+        }
+        //the function returns the options of the naked found in element, if not found returns null.
+        //naked of num n: n different cells in an element which all have the same n different options.
+        public static int[] found_naked(Cell[] element,int num)
+        {
+            foreach(Cell cell in element)
+            {
+                if (cell.options.Length == num && count_same_options(element, cell) == num) //found naked
+                    return cell.options;
+            }
+            return null;
+        }
 
+        //the function solves element using naked tactic
+        public static bool naked_cluster_element(Cell[] element,int num)
+        {
+            bool flag = false;
+            int[] naked_options = found_naked(element, num);
+            if (naked_options == null)
+                return false;
+            foreach(Cell cell in element)
+            {
+                if (cell.options.SequenceEqual(naked_options) == false) //if the options are not the same
+                {
+                    foreach(int option in naked_options) //remove all naked options from the cell
+                    {
+                        if (cell.remove(option))
+                            flag = true;
+                    }
+                }
+            }
+            return flag;
+        }
+
+        //the function solves the board using naked tactic ->   if in an element there are n cells which all contain n different options,
+        //remove from all other cells in the element those options.
+        public static bool naked_cluster(Board board)
+        {
+            bool flag = false;
+            for (int i = 2; i < board.length/2; i++)
+            {
+                for (int j = 0; j < board.length; j++)
+                {
+                    flag |= naked_cluster_element(board.GetRow(board.matrix, j), i);
+                    flag |= naked_cluster_element(board.GetColumn(board.matrix, j), i);
+                    flag |= naked_cluster_element(board.GetRow(board.boxmatrix, j), i);
+                }
+            }
+            return flag;
+        }
 
         //the function gets an option and a box, checks if all the cells that contains this option are in the same row/collumn,
         //if they are, it returns this row/collum otherwise returns null.

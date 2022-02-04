@@ -16,7 +16,7 @@ namespace Sudoku_solver_Aviv_Ovadia
             bool IsNum,valid=true;
             string data = "", filename = "";
             FileHandling fh=null;
-            Console.WriteLine("enter sudoku:\npress 1 for entering string\npress 2 for choosing file name from Boards directory\npress 3 for chossing full path");
+            Console.WriteLine("\nenter sudoku:\npress 1 for entering string\npress 2 for choosing file name from Boards directory\npress 3 for chossing full path");
             while (choice>3||choice<1)
             {
                 IsNum = true;
@@ -63,7 +63,7 @@ namespace Sudoku_solver_Aviv_Ovadia
                 data = fh.getData();
                 if (data == null)
                 {
-                    Console.WriteLine("No sudoku grid in input path");
+                    Console.WriteLine("No sudoku grid found in input path");
                     valid=false;
                 }
 
@@ -108,8 +108,7 @@ namespace Sudoku_solver_Aviv_Ovadia
             catch(InvalidInputException e)
             {
                 Console.WriteLine(e.Message);
-            }
-               
+            }               
        }
     }
 }

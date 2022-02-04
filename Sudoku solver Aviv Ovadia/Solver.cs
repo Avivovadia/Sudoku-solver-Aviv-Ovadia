@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Sudoku_solver_Aviv_Ovadia
 {
-    class Solver :TacticSolver //Solver class -> inherits the tactics from Tactic Solver and has function for the main solving algorithm of the sudoku.
+    public class Solver :TacticSolver //Solver class -> inherits the tactics from Tactic Solver and has function for the main solving algorithm of the sudoku.
     {
         //creates copy of the Cell matrix.
         public static Cell[,] copy(Cell[,] matrix)
@@ -33,6 +33,8 @@ namespace Sudoku_solver_Aviv_Ovadia
             {
                 solve_singles(board);
                 flag = solve_intersection(board);
+                solve_singles(board);
+                flag |= naked_cluster(board);
             }
         }
 
@@ -71,7 +73,6 @@ namespace Sudoku_solver_Aviv_Ovadia
         public static bool solve(Board board)
         {
             tactics(board); //solve tactics
-            
             if (board.check_valid() == false)
                 return false;
             if (next_pos(board) == null)

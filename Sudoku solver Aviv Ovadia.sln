@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.31729.503
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sudoku solver Aviv Ovadia", "Sudoku solver Aviv Ovadia\Sudoku solver Aviv Ovadia.csproj", "{A0EA5D1F-9C75-41FE-8ABB-4E30465189B1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sudoku solver Tests", "Sudoku solver Tests\Sudoku solver Tests.csproj", "{55B4D077-F038-4578-AD6C-B65AA3D1555D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{A0EA5D1F-9C75-41FE-8ABB-4E30465189B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A0EA5D1F-9C75-41FE-8ABB-4E30465189B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A0EA5D1F-9C75-41FE-8ABB-4E30465189B1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{55B4D077-F038-4578-AD6C-B65AA3D1555D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55B4D077-F038-4578-AD6C-B65AA3D1555D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55B4D077-F038-4578-AD6C-B65AA3D1555D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55B4D077-F038-4578-AD6C-B65AA3D1555D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

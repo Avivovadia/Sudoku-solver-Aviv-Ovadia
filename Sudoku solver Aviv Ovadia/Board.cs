@@ -6,12 +6,16 @@ using System.Threading.Tasks;
 
 namespace Sudoku_solver_Aviv_Ovadia
 {
-    class Board  //Board class repressents a full sudoku board. It has a matrix of Cells,length and scale.
-    {   public Cell[,] matrix { get; set; }
+    public class Board  //Board class repressents a full sudoku board. It has a matrix of Cells,length and scale.
+     {   public Cell[,] matrix { get; set; }
         public Cell[,] boxmatrix { get; set; }  //every row in this matrix is a box, it makes it easier to check boxes.
                                                 //both matrix and boxmatrix point to the same cells.
         public int length { get; set; }
         public int scale { get; set; }
+        public Board()
+        {
+
+        }
         public Board(string str)
         {
             get_matrix(str);
@@ -250,7 +254,7 @@ namespace Sudoku_solver_Aviv_Ovadia
             if(!check_valid())
                 throw new InvalidInputException();
         }
-
+        //the function returns data string represents the board matrix
         public string convert_to_string()
         {
             string str = "";

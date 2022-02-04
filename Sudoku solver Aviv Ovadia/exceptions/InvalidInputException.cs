@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Sudoku_solver_Aviv_Ovadia
 {
-    class InvalidInputException:Exception
+   public class InvalidInputException:Exception
     {
         public InvalidInputException() : base(modifymessage())
         {
