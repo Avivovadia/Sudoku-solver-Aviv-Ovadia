@@ -59,8 +59,13 @@ namespace Sudoku_solver_Aviv_Ovadia
               
                 Console.Write("\n\nenter path: ");
                 filename = Console.ReadLine();
-                fh = new FileHandling(filename);
-                data = fh.getData();
+                if (filename != "")
+                {
+                    fh = new FileHandling(filename);
+                    data = fh.getData();
+                }
+                else
+                    data = null;
                 if (data == null)
                 {
                     Console.WriteLine("No sudoku grid found in input path");

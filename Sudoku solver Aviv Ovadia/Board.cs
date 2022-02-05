@@ -144,7 +144,7 @@ namespace Sudoku_solver_Aviv_Ovadia
         public void check_input_size(string str)
         {
             int length = str.Length;
-            if (Math.Sqrt(Math.Sqrt(length)) != Math.Ceiling(Math.Sqrt(Math.Sqrt(length))))   //if the length is a power of 4
+            if (Math.Sqrt(Math.Sqrt(length)) != Math.Ceiling(Math.Sqrt(Math.Sqrt(length)))||length==0)   //if the length is a power of 4
                 throw new InvalidInputException(length);
 
             this.length = (int)Math.Sqrt(length);
